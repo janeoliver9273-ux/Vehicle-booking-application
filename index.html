@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Official Vehicle Rental Application Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0ea5e9;
+            --accent: #10b981;
+            --bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f8fafc 100%);
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 780px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #0284c7 100%);
+            color: white;
+            padding: 30px 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 40px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        .step-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+            flex: 1;
+        }
+
+        .step-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            margin-bottom: 6px;
+        }
+
+        .step-indicator.active .step-circle {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+        }
+
+        .step-indicator.completed .step-circle {
+            background: var(--accent);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .step-indicator.active .step-label {
+            color: var(--primary);
+        }
+
+        /* Form Sections */
+        .form-body {
+            padding: 30px;
+        }
+
+        .form-step {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 18px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .progress-container { padding: 15px 10px; }
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #334155;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 14px;
+            color: var(--text-main);
+            background: #ffffff;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        select:disabled {
+            background-color: #f1f5f9;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        optgroup {
+            font-weight: 700;
+            color: var(--primary);
+            background: #eff6ff;
+        }
+
+        option {
+            color: var(--text-main);
+            background: #ffffff;
+        }
+
+        /* File Upload Boxes */
+        .upload-box {
+            border: 2px dashed #94a3b8;
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .upload-box:hover {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .upload-box input[type="file"] {
+            display: none;
+        }
+
+        .preview-img {
+            max-width: 100%;
+            max-height: 140px;
+            margin-top: 10px;
+            border-radius: 8px;
+            display: none;
+            object-fit: cover;
+            border: 1px solid #cbd5e1;
+        }
+
+        /* Signature Pad */
+        .sig-wrapper {
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            background: #ffffff;
+            overflow: hidden;
+        }
+
+        canvas#signaturePad {
+            width: 100%;
+            height: 160px;
+            display: block;
+            cursor: crosshair;
+            touch-action: none;
+            background: #ffffff;
+        }
+
+        .sig-actions {
+            background: #f1f5f9;
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .btn-clear {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Payment Method Cards */
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        @media (max-width: 600px) {
+            .payment-options { grid-template-columns: 1fr; }
+        }
+
+        .pay-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            background: #ffffff;
+        }
+
+        .pay-card:hover {
+            transform: translateY(-2px);
+            border-color: #93c5fd;
+        }
+
+        .pay-card.selected {
+            border-color: var(--primary);
+            background: #eff6ff;
+            box-shadow: 0 6px 15px rgba(37, 99, 235, 0.15);
+        }
+
+        .pay-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .badge-chime { background: #dcfce7; color: #15803d; }
+        .badge-apple { background: #f1f5f9; color: #0f172a; }
+        .badge-cashapp { background: #d1fae5; color: #047857; }
+
+        .agent-notice {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            font-size: 13.5px;
+            color: #92400e;
+            line-height: 1.5;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 13px 24px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-prev {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .btn-next, .btn-submit {
+            background: var(--primary);
+            color: white;
+            margin-left: auto;
+        }
+
+        .btn-next:hover, .btn-submit:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-submit {
+            background: var(--accent);
+        }
+
+        .btn-submit:hover {
+            background: #059669;
+        }
+
+        /* Loading Overlay */
+        #loadingOverlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.92);
+            z-index: 999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 5px solid #cbd5e1;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Beautiful Success Popup Modal */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 440px;
+            border-radius: 22px;
+            padding: 32px 26px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: popScale 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            border-top: 6px solid var(--accent);
+        }
+
+        @keyframes popScale {
+            from { opacity: 0; transform: scale(0.88); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .success-icon-circle {
+            width: 72px;
+            height: 72px;
+            background: #dcfce7;
+            color: #16a34a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px;
+            font-size: 36px;
+            font-weight: bold;
+            box-shadow: 0 0 0 8px rgba(22, 163, 74, 0.1);
+        }
+
+        .modal-card h2 {
+            font-size: 22px;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .modal-card p {
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.55;
+            margin-bottom: 20px;
+        }
+
+        .summary-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 16px;
+            text-align: left;
+            margin-bottom: 22px;
+            font-size: 13px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+
+        .summary-row span:first-child {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .summary-row span:last-child {
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay">
+    <div class="spinner"></div>
+    <h3 style="color: #0f172a;">Submitting Your Application & Documents...</h3>
+    <p style="color: #64748b; font-size: 14px; margin-top: 5px;">Please wait a moment while we upload your files securely.</p>
+</div>
+
+<!-- Beautiful Success Popup Modal -->
+<div id="successModal" class="modal-backdrop">
+    <div class="modal-card">
+        <div class="success-icon-circle">✓</div>
+        <h2>Application Submitted!</h2>
+        <p>Thank you, <strong id="popApplicantName">Applicant</strong>! Your vehicle rental application, driver's license, and deposit receipt have been securely received.</p>
+        
+        <div class="summary-box">
+            <div class="summary-row">
+                <span>Reference ID:</span>
+                <span id="popRefId">#RNT-0000</span>
+            </div>
+            <div class="summary-row">
+                <span>Selected Vehicle:</span>
+                <span id="popVehicle">--</span>
+            </div>
+            <div class="summary-row">
+                <span>Deposit Paid:</span>
+                <span id="popDeposit">--</span>
+            </div>
+            <div class="summary-row">
+                <span>Assigned Agent:</span>
+                <span id="popAgent">--</span>
+            </div>
+        </div>
+
+        <button type="button" class="modal-btn" onclick="closeSuccessModal()">Done & Close</button>
+    </div>
+</div>
+
+<div class="container">
+    <div class="header">
+        <h1>Official Vehicle Rental Application</h1>
+        <p>Select your verified vehicle, upload your driver's license, and confirm your deposit</p>
+    </div>
+
+    <!-- Step Progress -->
+    <div class="progress-container">
+        <div class="step-indicator active" id="ind-1">
+            <div class="step-circle">1</div>
+            <div class="step-label">Vehicle Selection</div>
+        </div>
+        <div class="step-indicator" id="ind-2">
+            <div class="step-circle">2</div>
+            <div class="step-label">Driver & License</div>
+        </div>
+        <div class="step-indicator" id="ind-3">
+            <div class="step-circle">3</div>
+            <div class="step-label">E-Sign & Deposit</div>
+        </div>
+    </div>
+
+    <form id="rentalForm" class="form-body" novalidate>
+        <!-- STEP 1: VEHICLE SELECTION -->
+        <div class="form-step active" id="step-1">
+            <div class="section-title">Step 1: Select Your Vehicle & Rental Duration</div>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="carMake">Vehicle Company / Make *</label>
+                    <select id="carMake" required onchange="updateModels()">
+                        <option value="" disabled selected>-- Select Company --</option>
+                        <!-- Cars Category -->
+                        <optgroup label="Cars & SUVs">
+                            <option value="Toyota">Toyota</option>
+                            <option value="Honda">Honda</option>
+                            <option value="Nissan">Nissan</option>
+                            <option value="Ford">Ford</option>
+                            <option value="Chevrolet">Chevrolet</option>
+                            <option value="Hyundai">Hyundai</option>
+                            <option value="Kia">Kia</option>
+                            <option value="BMW">BMW</option>
+                            <option value="Mercedes-Benz">Mercedes-Benz</option>
+                            <option value="Audi">Audi</option>
+                            <option value="Volkswagen">Volkswagen</option>
+                            <option value="Mazda">Mazda</option>
+                            <option value="Subaru">Subaru</option>
+                            <option value="Lexus">Lexus</option>
+                            <option value="Tesla">Tesla</option>
+                            <option value="Jeep">Jeep</option>
+                            <option value="Dodge">Dodge</option>
+                            <option value="GMC">GMC</option>
+                        </optgroup>
+
+                        <!-- Bikes / Motorcycles Category -->
+                        <optgroup label="Motorcycles & Bikes">
+                            <option value="Yamaha">Yamaha</option>
+                            <option value="Honda Motorcycle">Honda (Motorcycle)</option>
+                            <option value="Suzuki">Suzuki</option>
+                            <option value="Kawasaki">Kawasaki</option>
+                            <option value="Harley-Davidson">Harley-Davidson</option>
+                            <option value="Ducati">Ducati</option>
+                            <option value="BMW Motorrad">BMW Motorrad</option>
+                            <option value="KTM">KTM</option>
+                            <option value="Triumph">Triumph</option>
+                            <option value="Royal Enfield">Royal Enfield</option>
+                            <option value="Bajaj">Bajaj</option>
+                            <option value="TVS">TVS</option>
+                        </optgroup>
+                        <option value="Other">Other Brand</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="carModel">Vehicle Model *</label>
+                    <select id="carModel" disabled required onchange="toggleCustomModel()">
+                        <option value="" disabled selected>-- Select Make First --</option>
+                    </select>
+                    <input type="text" id="customModelInput" placeholder="Enter your vehicle brand & model..." style="display: none; margin-top: 10px;">
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="carYear">Model Year *</label>
+                    <select id="carYear" required>
+                        <option value="" disabled selected>-- Select Year --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="rentalPlan">Rental Package *</label>
+                    <select id="rentalPlan" required>
+                        <option value="Daily Rental">Daily Rental</option>
+                        <option value="Weekend Package (3 Days)">Weekend Package (3 Days)</option>
+                        <option value="Weekly Rental (7 Days)" selected>Weekly Rental (7 Days)</option>
+                        <option value="Monthly Rental (30 Days)">Monthly Rental (30 Days)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="pickupDate">Pickup Date *</label>
+                    <input type="date" id="pickupDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="returnDate">Return Date *</label>
+                    <input type="date" id="returnDate" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="agentName">Referring Agent Name (Who shared this link with you?) *</label>
+                <input type="text" id="agentName" placeholder="Enter your agent's name" required>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-next" onclick="nextStep(2)">Next: Driver Details →</button>
+            </div>
+        </div>
+
+        <!-- STEP 2: DRIVER DETAILS & LICENSE UPLOAD -->
+        <div class="form-step" id="step-2">
+            <div class="section-title">Step 2: Applicant Information & Driver's License</div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="fullName">Full Legal Name (As on License) *</label>
+                    <input type="text" id="fullName" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" placeholder="+1 (555) 000-0000" required>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" placeholder="example@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="licenseNumber">Driver's License Number *</label>
+                    <input type="text" id="licenseNumber" placeholder="DL-123456789" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Current Residential Address *</label>
+                <input type="text" id="address" placeholder="Street Address, City, State, ZIP" required>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Driver's License (FRONT Side) *</label>
+                    <div class="upload-box" onclick="document.getElementById('dlFront').click()">
+                        <p style="font-size: 13px; font-weight: 600; color: #2563eb;">Click to Upload Front Photo</p>
+                        <span style="font-size: 11px; color: #64748b;">JPG, PNG (Auto-optimized)</span>
+                        <input type="file" id="dlFront" accept="image/*" required onchange="previewFile(this, 'prevFront')">
+                        <img id="prevFront" class="preview-img">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Driver's License (BACK Side) *</label>
+                    <div class="upload-box" onclick="document.getElementById('dlBack').click()">
+                        <p style="font-size: 13px; font-weight: 600; color: #2563eb;">Click to Upload Back Photo</p>
+                        <span style="font-size: 11px; color: #64748b;">JPG, PNG (Auto-optimized)</span>
+                        <input type="file" id="dlBack" accept="image/*" required onchange="previewFile(this, 'prevBack')">
+                        <img id="prevBack" class="preview-img">
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-prev" onclick="prevStep(1)">← Back</button>
+                <button type="button" class="btn btn-next" onclick="nextStep(3)">Next: E-Sign & Payment →</button>
+            </div>
+        </div>
+
+        <!-- STEP 3: E-SIGNATURE & DEPOSIT PAYMENT -->
+        <div class="form-step" id="step-3">
+            <div class="section-title">Step 3: Digital E-Signature & Deposit Payment</div>
+
+            <div class="form-group">
+                <label>Applicant Digital Signature *</label>
+                <div class="sig-wrapper">
+                    <canvas id="signaturePad"></canvas>
+                    <div class="sig-actions">
+                        <span>Sign inside the box above using your finger or mouse</span>
+                        <button type="button" class="btn-clear" onclick="clearSignature()">Clear Signature</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Select Deposit Payment Method *</label>
+                <input type="hidden" id="selectedPayment" required>
+                <div class="payment-options">
+                    <div class="pay-card" onclick="selectPayment('Chime Bank', this)">
+                        <span class="pay-badge badge-chime">Chime Bank</span>
+                        <p style="font-size: 12px; color: #475569;">Instant Chime Transfer</p>
+                    </div>
+                    <div class="pay-card" onclick="selectPayment('Apple Pay', this)">
+                        <span class="pay-badge badge-apple">Apple Pay</span>
+                        <p style="font-size: 12px; color: #475569;">Apple Cash / Tap Pay</p>
+                    </div>
+                    <div class="pay-card" onclick="selectPayment('Cash App', this)">
+                        <span class="pay-badge badge-cashapp">Cash App</span>
+                        <p style="font-size: 12px; color: #475569;">Instant $Cashtag</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="agent-notice">
+                <strong>Important Payment Instruction:</strong><br>
+                Please request the official <strong>Payment Tag / Phone / Email</strong> directly from the agent who referred you to this website. Once you send your security/booking deposit, upload the payment confirmation screenshot below to lock in your reservation.
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="depositAmount">Deposit Amount Paid ($) *</label>
+                    <input type="text" id="depositAmount" placeholder="e.g. $100 or $300" required>
+                </div>
+                <div class="form-group">
+                    <label>Upload Payment Screenshot *</label>
+                    <div class="upload-box" style="padding: 12px;" onclick="document.getElementById('payScreenshot').click()">
+                        <p style="font-size: 13px; font-weight: 600; color: #10b981;">Upload Payment Receipt</p>
+                        <input type="file" id="payScreenshot" accept="image/*" required onchange="previewFile(this, 'prevPay')">
+                        <img id="prevPay" class="preview-img">
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-prev" onclick="prevStep(2)">← Back</button>
+                <button type="submit" class="btn btn-submit">Submit & Confirm Booking ✓</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Your Deployed Google Apps Script Web App URL
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzyddtdhM9RaLeWz0o38BTDZkhFYBL8ILwxCRJthXr2LpvbozC7sUVhu3k7IVCecF8-/exec";
+
+    // Populate Vehicle Years (2026 down to 2000)
+    const yearSelect = document.getElementById('carYear');
+    for (let y = 2026; y >= 2000; y--) {
+        let opt = document.createElement('option');
+        opt.value = y;
+        opt.textContent = y;
+        yearSelect.appendChild(opt);
+    }
+
+    // Complete Vehicle Models Database (Cars & Motorcycles)
+    const vehicleData = {
+        "Toyota": ["Camry", "Corolla", "RAV4", "Highlander", "Prius", "Tacoma", "Tundra", "Land Cruiser", "4Runner", "Sienna", "Supra"],
+        "Honda": ["Civic", "Accord", "CR-V", "Pilot", "HR-V", "Odyssey", "Ridgeline", "Civic Type R"],
+        "Nissan": ["Altima", "Sentra", "Rogue", "Pathfinder", "Murano", "Maxima", "350Z Sports Coupe", "370Z", "GT-R"],
+        "Ford": ["F-150", "Mustang", "Explorer", "Escape", "Edge", "Bronco", "Ranger", "Fusion", "Expedition"],
+        "Chevrolet": ["Silverado 1500", "Malibu", "Equinox", "Tahoe", "Suburban", "Camaro", "Corvette", "Impala", "Traverse"],
+        "Hyundai": ["Elantra", "Sonata", "Tucson", "Santa Fe", "Palisade", "Kona", "Ioniq 5", "Accent"],
+        "Kia": ["Forte", "K5 / Optima", "Sportage", "Sorento", "Telluride", "Soul", "Seltos", "Carnival"],
+        "BMW": ["3 Series", "4 Series", "5 Series", "7 Series", "X1", "X3", "X5", "X7", "M3", "M4"],
+        "Mercedes-Benz": ["C-Class", "E-Class", "S-Class", "GLA", "GLC", "GLE", "GLS", "CLA", "G-Class"],
+        "Audi": ["A3", "A4", "A6", "A8", "Q3", "Q5", "Q7", "Q8", "e-tron", "RS6"],
+        "Volkswagen": ["Jetta", "Passat", "Tiguan", "Atlas", "Golf GTI", "Taos", "ID.4"],
+        "Mazda": ["Mazda3", "Mazda6", "CX-5", "CX-9", "CX-30", "CX-50", "MX-5 Miata"],
+        "Subaru": ["Outback", "Forester", "Crosstrek", "Impreza", "Legacy", "Ascent", "WRX"],
+        "Lexus": ["ES 350", "IS 300", "RX 350", "NX 350", "GX 460", "LX 600"],
+        "Tesla": ["Model 3", "Model Y", "Model S", "Model X", "Cybertruck"],
+        "Jeep": ["Wrangler", "Grand Cherokee", "Cherokee", "Compass", "Gladiator", "Wagoneer"],
+        "Dodge": ["Charger", "Challenger", "Durango", "Hornet", "Grand Caravan"],
+        "GMC": ["Sierra 1500", "Terrain", "Acadia", "Yukon", "Canyon", "Hummer EV"],
+        "Yamaha": ["YZF-R15", "MT-15", "FZS-FI V3", "YZF-R3", "MT-07", "MT-09", "YZF-R1", "Tenere 700"],
+        "Honda Motorcycle": ["CBR150R", "CB Hornet 160R", "X-Blade", "CBR600RR", "CBR1000RR", "Rebel 500", "Africa Twin", "Gold Wing"],
+        "Suzuki": ["Gixxer SF", "Gixxer 155", "GSX-R150", "GSX-R600", "GSX-R1000", "Hayabusa", "V-Strom 650"],
+        "Kawasaki": ["Ninja 300", "Ninja 400", "Ninja 650", "Ninja ZX-10R", "Z650", "Z900", "Versys 650"],
+        "Harley-Davidson": ["Iron 883", "Sportster S", "Fat Boy", "Street Glide", "Road King", "Pan America 1250"],
+        "Ducati": ["Panigale V2", "Panigale V4", "Monster", "Scrambler Icon", "Multistrada V4", "Diavel V4"],
+        "BMW Motorrad": ["G 310 R", "G 310 GS", "S 1000 RR", "R 1250 GS", "F 900 R", "M 1000 RR"],
+        "KTM": ["Duke 125", "Duke 200", "Duke 250", "Duke 390", "RC 200", "RC 390", "Adventure 390"],
+        "Triumph": ["Street Triple", "Speed Triple", "Trident 660", "Tiger 900", "Bonneville T120", "Rocket 3"],
+        "Royal Enfield": ["Classic 350", "Hunter 350", "Meteor 350", "Bullet 350", "Himalayan 450", "Continental GT 650"],
+        "Bajaj": ["Pulsar NS160", "Pulsar N160", "Pulsar 150", "Pulsar F250", "Dominar 400", "Avenger 160"],
+        "TVS": ["Apache RTR 160 4V", "Apache RTR 200 4V", "Apache RR 310", "Raider 125", "Ntorq 125"]
+    };
+
+    function updateModels() {
+        const make = document.getElementById('carMake').value;
+        const modelSelect = document.getElementById('carModel');
+        const customInput = document.getElementById('customModelInput');
+
+        modelSelect.innerHTML = '<option value="" disabled selected>-- Select Model --</option>';
+        customInput.style.display = 'none';
+        customInput.required = false;
+        customInput.value = '';
+
+        if (make === "Other") {
+            modelSelect.disabled = false;
+            let opt = document.createElement('option');
+            opt.value = "Other";
+            opt.textContent = "Other (Type Manually Below)";
+            opt.selected = true;
+            modelSelect.appendChild(opt);
+
+            customInput.style.display = 'block';
+            customInput.required = true;
+            return;
+        }
+
+        if (vehicleData[make]) {
+            modelSelect.disabled = false;
+            vehicleData[make].forEach(model => {
+                let opt = document.createElement('option');
+                opt.value = model;
+                opt.textContent = model;
+                modelSelect.appendChild(opt);
+            });
+
+            let otherOpt = document.createElement('option');
+            otherOpt.value = "Other";
+            otherOpt.textContent = "Other (Type Manually)";
+            modelSelect.appendChild(otherOpt);
+        }
+    }
+
+    function toggleCustomModel() {
+        const modelSelect = document.getElementById('carModel');
+        const customInput = document.getElementById('customModelInput');
+
+        if (modelSelect.value === "Other") {
+            customInput.style.display = 'block';
+            customInput.required = true;
+            customInput.focus();
+        } else {
+            customInput.style.display = 'none';
+            customInput.required = false;
+            customInput.value = '';
+        }
+    }
+
+    // Step Navigation with Validation
+    function nextStep(step) {
+        const currentStepEl = document.querySelector('.form-step.active');
+        const inputs = currentStepEl.querySelectorAll('input[required], select[required]');
+        
+        for (let input of inputs) {
+            if (input.type === 'file') {
+                if (!input.files || input.files.length === 0) {
+                    alert("Please upload all required license photos before proceeding.");
+                    return;
+                }
+            } else if (!input.value.trim()) {
+                input.focus();
+                alert("Please fill out all required fields before proceeding.");
+                return;
+            }
+        }
+        showStep(step);
+    }
+
+    function prevStep(step) {
+        showStep(step);
+    }
+
+    function showStep(step) {
+        document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
+        document.getElementById('step-' + step).classList.add('active');
+
+        for (let i = 1; i <= 3; i++) {
+            const ind = document.getElementById('ind-' + i);
+            ind.classList.remove('active', 'completed');
+            if (i < step) ind.classList.add('completed');
+            if (i === step) ind.classList.add('active');
+        }
+        if (step === 3) {
+            setTimeout(resizeCanvas, 50);
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // File Preview
+    function previewFile(input, imgId) {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById(imgId);
+                img.src = e.target.result;
+                img.style.display = 'inline-block';
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Payment Card Selection
+    function selectPayment(method, cardEl) {
+        document.querySelectorAll('.pay-card').forEach(c => c.classList.remove('selected'));
+        cardEl.classList.add('selected');
+        document.getElementById('selectedPayment').value = method;
+    }
+
+    // Signature Pad Logic
+    const canvas = document.getElementById('signaturePad');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+    let hasSigned = false;
+
+    function resizeCanvas() {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        const rect = canvas.getBoundingClientRect();
+        if (rect.width === 0) return;
+        
+        canvas.width = rect.width * ratio;
+        canvas.height = rect.height * ratio;
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(ratio, ratio);
+        ctx.lineWidth = 2.5;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.strokeStyle = '#0f172a';
+    }
+
+    function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return { x: clientX - rect.left, y: clientY - rect.top };
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+        drawing = true;
+        hasSigned = true;
+        ctx.beginPath();
+        const p = getPos(e);
+        ctx.moveTo(p.x, p.y);
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (!drawing) return;
+        const p = getPos(e);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+    });
+
+    window.addEventListener('mouseup', () => { drawing = false; });
+
+    canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        drawing = true;
+        hasSigned = true;
+        ctx.beginPath();
+        const p = getPos(e);
+        ctx.moveTo(p.x, p.y);
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        if (!drawing) return;
+        const p = getPos(e);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', () => { drawing = false; });
+
+    function clearSignature() {
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
+        hasSigned = false;
+    }
+
+    // Auto-Compress Images to Fast Base64 (Prevents Google Apps Script Size Limit Failure)
+    function compressImageToBase64(file, maxWidth = 1000, quality = 0.75) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const tempCanvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > maxWidth) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    }
+
+                    tempCanvas.width = width;
+                    tempCanvas.height = height;
+                    const tempCtx = tempCanvas.getContext('2d');
+                    tempCtx.drawImage(img, 0, 0, width, height);
+
+                    resolve(tempCanvas.toDataURL('image/jpeg', quality));
+                };
+                img.onerror = (err) => reject(err);
+            };
+            reader.onerror = (err) => reject(err);
+        });
+    }
+
+    // Close Success Modal & Reset Form
+    function closeSuccessModal() {
+        document.getElementById('successModal').style.display = 'none';
+        document.getElementById('rentalForm').reset();
+        
+        document.querySelectorAll('.preview-img').forEach(img => {
+            img.src = '';
+            img.style.display = 'none';
+        });
+        document.querySelectorAll('.pay-card').forEach(c => c.classList.remove('selected'));
+        document.getElementById('selectedPayment').value = '';
+        
+        const modelSelect = document.getElementById('carModel');
+        modelSelect.innerHTML = '<option value="" disabled selected>-- Select Make First --</option>';
+        modelSelect.disabled = true;
+        document.getElementById('customModelInput').style.display = 'none';
+
+        clearSignature();
+        showStep(1);
+    }
+
+    // Form Submission to Google Apps Script
+    document.getElementById('rentalForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        if (!hasSigned) {
+            alert("Please provide your digital signature before submitting.");
+            return;
+        }
+        if (!document.getElementById('selectedPayment').value) {
+            alert("Please select a deposit payment method (Chime Bank, Apple Pay, or Cash App).");
+            return;
+        }
+        const depositInput = document.getElementById('depositAmount');
+        if (!depositInput.value.trim()) {
+            depositInput.focus();
+            alert("Please enter the deposit amount paid.");
+            return;
+        }
+        const payFile = document.getElementById('payScreenshot').files[0];
+        if (!payFile) {
+            alert("Please upload your payment receipt screenshot.");
+            return;
+        }
+
+        document.getElementById('loadingOverlay').style.display = 'flex';
+
+        try {
+            const makeVal = document.getElementById('carMake').value;
+            let modelVal = document.getElementById('carModel').value;
+            if (modelVal === "Other") {
+                modelVal = document.getElementById('customModelInput').value.trim();
+            }
+
+            const yearVal = document.getElementById('carYear').value;
+            const fullNameVal = document.getElementById('fullName').value.trim();
+            const agentNameVal = document.getElementById('agentName').value.trim();
+            const depositVal = depositInput.value.trim();
+            const paymentMethodVal = document.getElementById('selectedPayment').value;
+
+            // Compress images before sending so Google Apps Script accepts them reliably
+            const dlFrontBase64 = await compressImageToBase64(document.getElementById('dlFront').files[0]);
+            const dlBackBase64 = await compressImageToBase64(document.getElementById('dlBack').files[0]);
+            const payScreenBase64 = await compressImageToBase64(payFile);
+            const signatureBase64 = canvas.toDataURL('image/png');
+
+            const payload = {
+                carMake: makeVal,
+                carModel: modelVal,
+                carYear: yearVal,
+                rentalPlan: document.getElementById('rentalPlan').value,
+                pickupDate: document.getElementById('pickupDate').value,
+                returnDate: document.getElementById('returnDate').value,
+                agentName: agentNameVal,
+                fullName: fullNameVal,
+                phone: document.getElementById('phone').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                licenseNumber: document.getElementById('licenseNumber').value.trim(),
+                address: document.getElementById('address').value.trim(),
+                paymentMethod: paymentMethodVal,
+                depositAmount: depositVal,
+                dlFront: dlFrontBase64,
+                dlBack: dlBackBase64,
+                payScreenshot: payScreenBase64,
+                signature: signatureBase64
+            };
+
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error("Server responded with status " + response.status);
+            }
+
+            document.getElementById('loadingOverlay').style.display = 'none';
+
+            // Populate & Show Beautiful Success Popup
+            const randomRef = "#RNT-" + Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('popRefId').textContent = randomRef;
+            document.getElementById('popApplicantName').textContent = fullNameVal;
+            document.getElementById('popVehicle').textContent = `${yearVal} ${makeVal} ${modelVal}`;
+            document.getElementById('popDeposit').textContent = `${depositVal} (${paymentMethodVal})`;
+            document.getElementById('popAgent').textContent = agentNameVal;
+
+            document.getElementById('successModal').style.display = 'flex';
+
+        } catch (error) {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            alert("Submission error! Please make sure your Google Apps Script Web App is deployed with 'Who has access: Anyone' and check your internet connection.");
+            console.error("Submission Error:", error);
+        }
+    });
+</script>
+
+</body>
+</html>
